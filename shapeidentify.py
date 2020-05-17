@@ -4,7 +4,7 @@ import ast
 import random
 import time, threading
 from threading import Thread
-import sys
+import sys, select
 
 shape_game = {}
 answer = ""
@@ -74,7 +74,7 @@ def driver():
     load_guide()
     load_level_shape_info()
     how_many = int(shape_game["level_shape"][default_level])
-    t_level = 6 / how_many
+    t_level = 60 / how_many
     print(t_level)
 
     print(shape_game)
@@ -90,12 +90,13 @@ def driver():
         while i < how_many:
             i = i + 1
             print(i)
-            threading.Timer(1, try_loop).start()
-            try:
-                a = input("your answer:")
-            except InterruptExecution:
-                print("time passed")
-                break
+            print(next_shape())
+            k, o, e = select.select([sys.stdin], [], [], t_level)
+
+            if k:
+                print("You said", sys.stdin.readline().strip())
+            else:
+                print("You said nothing!")
             # time.sleep(2)
             print("completed a try")
         time_left = end_time - time.perf_counter()

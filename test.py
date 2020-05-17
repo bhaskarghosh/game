@@ -1,19 +1,11 @@
-from threading import Thread
-import threading
+import sys, select
 
+print("You have ten seconds to answer!")
 
-def raw_input_with_timeout(prompt, timeout=2):
-    print(prompt)
-    timer = threading.Timer(timeout, Thread.interrupt_main)
-    astring = None
-    try:
-        timer.start()
-        astring = input(prompt)
-    except KeyboardInterrupt:
-        pass
-    timer.cancel()
-    return astring
+i, o, e = select.select([sys.stdin], [], [], 2)
 
-
-raw_input_with_timeout("Hello", 2)
+if i:
+    print("You said", sys.stdin.readline().strip())
+else:
+    print("You said nothing!")
 
