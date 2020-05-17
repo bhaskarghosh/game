@@ -1,0 +1,19 @@
+{
+    3 : "three.jpg",
+    4 : "four.jpg",
+    5 : "five.jpg",
+    6 : "six.jpg",
+    7 : "seven.jpg",
+    8 : "eight.jpg",
+    9 : "nine.jpg",
+    10 : "ten.jpg",
+    11 : "eleven.jpg",
+    12 : "twelve.jpg",
+    13 : "thirteen.jpg",
+    14 : "fourteen.jpg",
+    15 : "fifteen.jpg",
+    16 : "sixteen.jpg",
+    17 : "seventeen.jpg",
+    18 : "eighteen.jpg",
+    19 : "nineteen.jpg"
+}
