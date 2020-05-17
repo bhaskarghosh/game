@@ -9,6 +9,15 @@ import sys
 shape_game = {}
 answer = ""
 
+"""
+https://stackoverflow.com/questions/25029537/interrupt-function-execution-from-another-function-in-python
+
+"""
+
+
+class InterruptExecution(Exception):
+    pass
+
 
 def get_answer():
     ans = "Nothing"
@@ -28,6 +37,7 @@ def game_loop():
 
 def try_loop():
     shape_game["try"] = True
+    raise InterruptExecution("Move on")
 
 
 def load_level_shape_info():
@@ -80,7 +90,12 @@ def driver():
         while i < how_many:
             i = i + 1
             print(i)
-            print(get_answer())
+            threading.Timer(1, try_loop).start()
+            try:
+                a = input("your answer:")
+            except InterruptExecution:
+                print("time passed")
+                break
             # time.sleep(2)
             print("completed a try")
         time_left = end_time - time.perf_counter()
