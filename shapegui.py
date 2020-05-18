@@ -6,6 +6,7 @@ import time, threading
 from threading import Thread
 import sys, select
 from PIL import ImageTk, Image
+import tkinter.font as font
 
 shape_game = {}
 answer = ""
@@ -66,12 +67,17 @@ def end_game():
     print("Interval:" + str(shape_game["interval"]))
     ShowScore()
     shape_game["start_button"] = Button(
-        shape_game["root"], text="Re-Start Game", command=next_shape
+        shape_game["root"],
+        text="Re-Start Game",
+        highlightbackground="#b4ff8b",
+        command=next_shape,
     )
+    shape_game["start_button"]["font"] = shape_game["font"]
     shape_game["start_button"].pack(side=BOTTOM, fill=X)
 
 
 def next_shape():
+    shape_game["status_message"].set("")
     if shape_game["start_button"]:
         shape_game["start_button"].destroy()
         shape_game["start_button"] = None
@@ -156,7 +162,7 @@ def driver():
     root = Tk()
     root.title("Recognize the Shape")
     root.geometry("800x800")
-    root.iconbitmap("c:/guis/codemy.ico")
+
     shape_game["root"] = root
     create_menus(root)
     default_level = 1
@@ -167,10 +173,13 @@ def driver():
     print("Interval:" + str(shape_game["interval"]))
     show_status()
     load_shapesdb()
-
+    shape_game["font"] = font.Font(size=30)
     shape_game["entry"] = Entry(root)
     shape_game["entry"].pack(side=BOTTOM, fill=X)
-    shape_game["start_button"] = Button(root, text="Start Game", command=next_shape)
+    shape_game["start_button"] = Button(
+        root, text="Start Game", highlightbackground="#b4ff8b", command=next_shape
+    )
+    shape_game["start_button"]["font"] = shape_game["font"]
     shape_game["start_button"].pack(side=BOTTOM, fill=X)
     root.mainloop()
 
