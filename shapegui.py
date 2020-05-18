@@ -43,27 +43,50 @@ def load_guide():
         shape_game["instr_guide"] = fp.read()
 
 
+def check_answer(ci):
+    shape_game["c_label"].destroy()
+    ans = shape_game["entry"].get()
+    if ans == str(ci):
+        shape_game["status_message"].set("Correct!!")
+        shape_game["score"]["right"] += 1
+    else:
+        shape_game["status_message"].set("Wrong!!")
+        shape_game["score"]["wrong"] += 1
+    ans = shape_game["entry"].delete(0, END)
+
+
+def end_game():
+    shape_game["c_label"].destroy()
+    # TODO Show result here
+    shape_game["current_level"] += 1
+    level = shape_game["current_level"]
+    shape_game["current_image"] = -1
+    how_many = int(shape_game["level_shape"][level])
+    shape_game["interval"] = int((60 / how_many) * 1000)
+    shape_game["start_button"] = Button(
+        shape_game["root"], text="Re-Start Game", command=next_shape
+    )
+    shape_game["start_button"].pack()
+
+
 def next_shape():
+    if shape_game["start_button"]:
+        shape_game["start_button"].destroy()
+        shape_game["start_button"] = None
+    level = shape_game["current_level"]
+    if shape_game["counter"] >= int(shape_game["level_shape"][level]):
+        end_game()
+        return
     ci = shape_game["current_image"]
     if ci != -1:
-        shape_game["c_label"].destroy()
-        shape_game["status_message"].set(shape_game["entry"].get())
+        check_answer(ci)
     ci = random.choices(shape_game["keylist"])[0]
     print("In Next Shape " + str(ci))
     shape_game["c_label"] = Label(image=shape_game["image_map"][ci])
-    # shape_game["image_map"][k] = Label(image=my_image)
     shape_game["c_label"].pack()
     shape_game["current_image"] = ci
-    # shape_game["status_message"].set(
-    #     "Showing "
-    #     + shape_game["shape_map"][ci]
-    #     + " Image. You have "
-    #     + str(shape_game["interval"])
-    #     + " seconds to answer"
-    # )
+    shape_game["counter"] += 1
     shape_game["root"].after(shape_game["interval"], next_shape)
-
-    print("return from next shape")
 
 
 def load_shapesdb():
@@ -91,23 +114,6 @@ def show_status():
     my_status.pack(side=BOTTOM, fill=X)
 
 
-def check_result():
-    shape_game["status_message"].set("Correct!!")
-
-
-def play_the_game():
-    level = shape_game["current_level"]
-    i = 0
-    # threading.Timer(1, try_loop).start()
-    while i < int(shape_game["level_shape"][level]):
-        next_shape()
-        # print("i am here")
-        # shape_game["entry"].after(shape_game["interval"], check_result)
-        # print("after delay")
-        # time.sleep(2)
-        i = i + 1
-
-
 def create_menus(root):
 
     # Define a Menu
@@ -129,20 +135,29 @@ def create_menus(root):
     edit_menu.add_command(label="About", command=fake_command)
 
 
+def init():
+    shape_game["completed"] = False
+    shape_game["image_map"] = {}
+    user_suffix = str(random.randrange(0, 101, 2))
+    shape_game["user"] = "user" + user_suffix
+    shape_game["current_image"] = -1
+    shape_game["current_level"] = 1
+    shape_game["c_label"] = ""
+    shape_game["score"] = {}
+    shape_game["score"]["right"] = 0
+    shape_game["score"]["wrong"] = 0
+    shape_game["counter"] = 0
+
+
 def driver():
+    init()
     root = Tk()
     root.title("Recognize the Shape")
     root.geometry("800x800")
     root.iconbitmap("c:/guis/codemy.ico")
     shape_game["root"] = root
     create_menus(root)
-    default_level = 5
-    shape_game["completed"] = False
-    shape_game["image_map"] = {}
-
-    user_suffix = str(random.randrange(0, 101, 2))
-    shape_game["user"] = "user" + user_suffix
-
+    default_level = 1
     load_guide()
     load_level_shape_info()
     how_many = int(shape_game["level_shape"][default_level])
@@ -150,32 +165,11 @@ def driver():
     print(shape_game["interval"])
     show_status()
     load_shapesdb()
-    shape_game["current_image"] = -1
-    shape_game["current_level"] = 1
-    shape_game["c_label"] = ""
+
     shape_game["entry"] = Entry(root)
     shape_game["entry"].pack(side=BOTTOM, fill=X)
-    b = Button(root, text="Start Game", command=next_shape)
-    b.pack()
-    # next_shape()
-    # next_shape()
-    # root.after(shape_game["interval"], lambda:shape_game["c_label"].destroy())
-    # next_shape()
-    # root.after(shape_game["interval"], lambda:shape_game["c_label"].destroy())
-    # # show_button = Button(root, text="Show", command=show)
-    # hide_button = Button(root, text="Hide", command=hide)
-
-    # show_button.grid(row=0, column=0)
-    # hide_button.grid(row=0, column=1)
-
-    # my_frame = Frame(root, width=200, height=200, bd=5, bg="blue", relief="sunken")
-    # my_frame.grid(row=1, column=0, columnspan=2, padx=20, pady=20)
-
-    # frame_label = Label(my_frame, text="Hello World!", font=("Helvetica", 20))
-    # frame_label.pack(padx=20, pady=20)
-
-    # image_label.pack_forget()
-
+    shape_game["start_button"] = Button(root, text="Start Game", command=next_shape)
+    shape_game["start_button"].pack()
     root.mainloop()
 
 
