@@ -1,11 +1,14 @@
-import sys, select
+from tkinter import *
 
-print("You have ten seconds to answer!")
 
-i, o, e = select.select([sys.stdin], [], [], 2)
+def blink():
+    e.config(bg="green")
+    e.after(1000, lambda: e.config(bg="white"))  # after 1000ms
 
-if i:
-    print("You said", sys.stdin.readline().strip())
-else:
-    print("You said nothing!")
 
+root = Tk()
+e = Entry(root)
+e.pack()
+b = Button(root, text="blink", command=blink)
+b.pack()
+root.mainloop()

@@ -20,6 +20,10 @@ def fake_command():
     pass
 
 
+def game_loop():
+    shape_game["completed"] = True
+
+
 def hide(my_frame):
     my_frame.grid_forget()
 
@@ -41,10 +45,10 @@ def load_guide():
 
 def next_shape():
     ci = shape_game["current_image"]
-    if ci != -1:
-        shape_game["c_label"].destroy()
-    print("In Next Shape " + str(ci))
+    # if ci != -1:
+    #     shape_game["c_label"].destroy()
     ci = random.choices(shape_game["keylist"])[0]
+    print("In Next Shape " + str(ci))
     shape_game["c_label"] = Label(image=shape_game["image_map"][ci])
     # shape_game["image_map"][k] = Label(image=my_image)
     shape_game["c_label"].pack()
@@ -56,16 +60,9 @@ def next_shape():
         + str(shape_game["interval"])
         + " seconds to answer"
     )
+    shape_game["c_label"].after(shape_game["interval"], check_result)
 
-
-def temp():
-    print(shape_game["image_map"])
-    shape_game["image_map"][3].pack()
-
-
-def temp1():
-    print(shape_game["image_map"])
-    shape_game["image_map"][3].pack_forget()
+    print("return from next shape")
 
 
 def load_shapesdb():
@@ -93,6 +90,23 @@ def show_status():
     my_status.pack(side=BOTTOM, fill=X)
 
 
+def check_result():
+    shape_game["status_message"].set("Correct!!")
+
+
+def play_the_game():
+    level = shape_game["current_level"]
+    i = 0
+    # threading.Timer(1, try_loop).start()
+    while i < int(shape_game["level_shape"][level]):
+        next_shape()
+        # print("i am here")
+        # shape_game["entry"].after(shape_game["interval"], check_result)
+        # print("after delay")
+        # time.sleep(2)
+        i = i + 1
+
+
 def create_menus(root):
 
     # Define a Menu
@@ -111,7 +125,7 @@ def create_menus(root):
     my_menu.add_cascade(label="Help", menu=edit_menu)
     edit_menu.add_command(label="Shapes Help", command=Showhelp)
     edit_menu.add_separator()
-    edit_menu.add_command(label="About", command=temp1)
+    edit_menu.add_command(label="About", command=fake_command)
 
 
 def driver():
@@ -131,11 +145,17 @@ def driver():
     load_guide()
     load_level_shape_info()
     how_many = int(shape_game["level_shape"][default_level])
-    shape_game["interval"] = 60 / how_many
+    shape_game["interval"] = int((60 / how_many) * 1000)
     print(shape_game["interval"])
     show_status()
     load_shapesdb()
     shape_game["current_image"] = -1
+    shape_game["current_level"] = 1
+
+    shape_game["entry"] = Entry(root)
+    shape_game["entry"].pack(side=BOTTOM, fill=X)
+    b = Button(root, text="Start Game", command=play_the_game)
+    b.pack()
     # show_button = Button(root, text="Show", command=show)
     # hide_button = Button(root, text="Hide", command=hide)
 
@@ -149,6 +169,7 @@ def driver():
     # frame_label.pack(padx=20, pady=20)
 
     # image_label.pack_forget()
+
     root.mainloop()
 
 
