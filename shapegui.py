@@ -15,21 +15,18 @@ def Showhelp():
     response = messagebox.showinfo("How to play the Game", shape_game["instr_guide"])
 
 
+def ShowScore():
+    score = "Right: " + str(shape_game["score"]["right"]) + "\n"
+    score += "Wrong: " + str(shape_game["score"]["wrong"]) + "\n"
+
+    response = messagebox.showinfo("Your Score", score)
+
+
 # Define our fake command
-def fake_command():
-    pass
-
-
-def game_loop():
-    shape_game["completed"] = True
-
-
-def hide(my_frame):
-    my_frame.grid_forget()
-
-
-def show(my_frame):
-    my_frame.grid(row=1, column=0, columnspan=2, padx=20, pady=20)
+def about_command():
+    response = messagebox.showinfo(
+        "AP - Computer Science Principles", shape_game["about"]
+    )
 
 
 def load_level_shape_info():
@@ -41,6 +38,8 @@ def load_level_shape_info():
 def load_guide():
     with open("instrguide.txt", "r") as fp:
         shape_game["instr_guide"] = fp.read()
+    with open("about.txt", "r") as fp:
+        shape_game["about"] = fp.read()
 
 
 def check_answer(ci):
@@ -53,6 +52,7 @@ def check_answer(ci):
         shape_game["status_message"].set("Wrong!!")
         shape_game["score"]["wrong"] += 1
     ans = shape_game["entry"].delete(0, END)
+    print(shape_game["score"])
 
 
 def end_game():
@@ -63,10 +63,12 @@ def end_game():
     shape_game["current_image"] = -1
     how_many = int(shape_game["level_shape"][level])
     shape_game["interval"] = int((60 / how_many) * 1000)
+    print("Interval:" + str(shape_game["interval"]))
+    ShowScore()
     shape_game["start_button"] = Button(
         shape_game["root"], text="Re-Start Game", command=next_shape
     )
-    shape_game["start_button"].pack()
+    shape_game["start_button"].pack(side=BOTTOM, fill=X)
 
 
 def next_shape():
@@ -132,7 +134,7 @@ def create_menus(root):
     my_menu.add_cascade(label="Help", menu=edit_menu)
     edit_menu.add_command(label="Shapes Help", command=Showhelp)
     edit_menu.add_separator()
-    edit_menu.add_command(label="About", command=fake_command)
+    edit_menu.add_command(label="About", command=about_command)
 
 
 def init():
@@ -162,14 +164,14 @@ def driver():
     load_level_shape_info()
     how_many = int(shape_game["level_shape"][default_level])
     shape_game["interval"] = int((60 / how_many) * 1000)
-    print(shape_game["interval"])
+    print("Interval:" + str(shape_game["interval"]))
     show_status()
     load_shapesdb()
 
     shape_game["entry"] = Entry(root)
     shape_game["entry"].pack(side=BOTTOM, fill=X)
     shape_game["start_button"] = Button(root, text="Start Game", command=next_shape)
-    shape_game["start_button"].pack()
+    shape_game["start_button"].pack(side=BOTTOM, fill=X)
     root.mainloop()
 
 
