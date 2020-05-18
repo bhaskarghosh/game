@@ -45,22 +45,23 @@ def load_guide():
 
 def next_shape():
     ci = shape_game["current_image"]
-    # if ci != -1:
-    #     shape_game["c_label"].destroy()
+    if ci != -1:
+        shape_game["c_label"].destroy()
+        shape_game["status_message"].set(shape_game["entry"].get())
     ci = random.choices(shape_game["keylist"])[0]
     print("In Next Shape " + str(ci))
     shape_game["c_label"] = Label(image=shape_game["image_map"][ci])
     # shape_game["image_map"][k] = Label(image=my_image)
     shape_game["c_label"].pack()
     shape_game["current_image"] = ci
-    shape_game["status_message"].set(
-        "Showing "
-        + shape_game["shape_map"][ci]
-        + " Image. You have "
-        + str(shape_game["interval"])
-        + " seconds to answer"
-    )
-    shape_game["c_label"].after(shape_game["interval"], check_result)
+    # shape_game["status_message"].set(
+    #     "Showing "
+    #     + shape_game["shape_map"][ci]
+    #     + " Image. You have "
+    #     + str(shape_game["interval"])
+    #     + " seconds to answer"
+    # )
+    shape_game["root"].after(shape_game["interval"], next_shape)
 
     print("return from next shape")
 
@@ -135,7 +136,7 @@ def driver():
     root.iconbitmap("c:/guis/codemy.ico")
     shape_game["root"] = root
     create_menus(root)
-    default_level = 1
+    default_level = 5
     shape_game["completed"] = False
     shape_game["image_map"] = {}
 
@@ -151,12 +152,17 @@ def driver():
     load_shapesdb()
     shape_game["current_image"] = -1
     shape_game["current_level"] = 1
-
+    shape_game["c_label"] = ""
     shape_game["entry"] = Entry(root)
     shape_game["entry"].pack(side=BOTTOM, fill=X)
-    b = Button(root, text="Start Game", command=play_the_game)
+    b = Button(root, text="Start Game", command=next_shape)
     b.pack()
-    # show_button = Button(root, text="Show", command=show)
+    # next_shape()
+    # next_shape()
+    # root.after(shape_game["interval"], lambda:shape_game["c_label"].destroy())
+    # next_shape()
+    # root.after(shape_game["interval"], lambda:shape_game["c_label"].destroy())
+    # # show_button = Button(root, text="Show", command=show)
     # hide_button = Button(root, text="Hide", command=hide)
 
     # show_button.grid(row=0, column=0)
