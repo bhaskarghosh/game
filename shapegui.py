@@ -58,22 +58,24 @@ def check_answer(ci):
 
 def end_game():
     shape_game["c_label"].destroy()
-    # TODO Show result here
-    shape_game["current_level"] += 1
-    level = shape_game["current_level"]
-    shape_game["current_image"] = -1
-    how_many = int(shape_game["level_shape"][level])
-    shape_game["interval"] = int((60 / how_many) * 1000)
-    print("Interval:" + str(shape_game["interval"]))
     ShowScore()
-    shape_game["start_button"] = Button(
-        shape_game["root"],
-        text="Re-Start Game",
-        highlightbackground="#b4ff8b",
-        command=next_shape,
-    )
-    shape_game["start_button"]["font"] = shape_game["font"]
-    shape_game["start_button"].pack(side=BOTTOM, fill=X)
+    shape_game["current_level"] += 1
+    if shape_game["current_level"] <= 1:
+        level = shape_game["current_level"]
+        shape_game["current_image"] = -1
+        how_many = int(shape_game["level_shape"][level])
+        shape_game["interval"] = int((60 / how_many) * 1000)
+        print("Interval:" + str(shape_game["interval"]))
+        shape_game["start_button"] = Button(
+            shape_game["root"],
+            text="Re-Start Game",
+            highlightbackground="#b4ff8b",
+            command=next_shape,
+        )
+        shape_game["start_button"]["font"] = shape_game["font"]
+        shape_game["start_button"].pack(side=BOTTOM, fill=X)
+    else:
+        messagebox.showinfo("Game Over", "You have played all levels")
 
 
 def next_shape():
