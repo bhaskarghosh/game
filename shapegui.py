@@ -60,7 +60,7 @@ def end_game():
     shape_game["c_label"].destroy()
     ShowScore()
     shape_game["current_level"] += 1
-    if shape_game["current_level"] <= 1:
+    if shape_game["current_level"] <= 5:
         level = shape_game["current_level"]
         shape_game["current_image"] = -1
         how_many = int(shape_game["level_shape"][level])
