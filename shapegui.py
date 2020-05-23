@@ -157,6 +157,13 @@ def init():
     shape_game["score"]["right"] = 0
     shape_game["score"]["wrong"] = 0
     shape_game["counter"] = 0
+    load_guide()
+    load_level_shape_info()
+    default_level = 1
+    how_many = int(shape_game["level_shape"][default_level])
+    shape_game["interval"] = int((60 / how_many) * 1000)
+    print("Interval:" + str(shape_game["interval"]))
+    load_shapesdb()
 
 
 def driver():
@@ -164,17 +171,9 @@ def driver():
     root = Tk()
     root.title("Recognize the Shape")
     root.geometry("800x800")
-
     shape_game["root"] = root
     create_menus(root)
-    default_level = 1
-    load_guide()
-    load_level_shape_info()
-    how_many = int(shape_game["level_shape"][default_level])
-    shape_game["interval"] = int((60 / how_many) * 1000)
-    print("Interval:" + str(shape_game["interval"]))
     show_status()
-    load_shapesdb()
     shape_game["font"] = font.Font(size=30)
     shape_game["entry"] = Entry(root)
     shape_game["entry"].pack(side=BOTTOM, fill=X)
