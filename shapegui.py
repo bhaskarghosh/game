@@ -46,7 +46,7 @@ def load_guide():
 def check_answer(ci):
     shape_game["c_label"].destroy()
     ans = shape_game["entry"].get()
-    if ans == str(ci):
+    if ans and ans == str(ci):
         shape_game["status_message"].set("Correct!!")
         shape_game["score"]["right"] += 1
     else:
